@@ -1,0 +1,12 @@
+name: acme/persistent-skill
+version: 1.0.0
+model:
+  provider: anthropic
+  name: claude-sonnet-4-20250514
+inputs:
+  - name: query
+    type: string
+outputs:
+  - name: result
+    type: string
+context_mode: persistent

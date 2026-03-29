@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="852.21191"
+   height="456.36682"
+   viewBox="0 0 852.21191 456.36682"
+   version="1.1"
+   id="svg1"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     inkscape:export-bgcolor="#00000000">
+    <inkscape:page
+       x="0"
+       y="0"
+       width="852.21191"
+       height="456.36682"
+       id="page2"
+       margin="0"
+       bleed="0" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1">
+    <clipPath
+       id="clip0">
+      <rect
+         x="236"
+         y="243"
+         width="521"
+         height="279"
+         id="rect1" />
+    </clipPath>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-113.89405,-311.81659)">
+    <g
+       clip-path="url(#clip0)"
+       transform="matrix(1.6357234,0,0,1.6357234,-272.13667,-85.6642)"
+       id="g6">
+      <path
+         d="m 583,288 h 63.529 L 757,383 646.529,478 H 583 l 110.471,-95 z"
+         fill="#00aeff"
+         fill-rule="evenodd"
+         id="path1" />
+      <path
+         d="M 0,0 H 63.5291 L 174,95 63.5291,190 H 0 L 110.471,95 Z"
+         fill="#00aeff"
+         fill-rule="evenodd"
+         transform="matrix(-1,0,0,1,410,288)"
+         id="path2" />
+      <path
+         d="M 427,243 652,382.5 427,522 Z"
+         fill="#00aeff"
+         fill-rule="evenodd"
+         id="path3" />
+      <path
+         d="M 634.472,372 652,382.841 427,522 v -79.655 z"
+         fill="#0070da"
+         fill-rule="evenodd"
+         id="path4" />
+      <path
+         d="M 693.471,383 H 757 v 0 L 646.529,478 H 583 Z"
+         fill="#017be3"
+         fill-rule="evenodd"
+         id="path5" />
+      <path
+         d="M 174,0 H 110.471 V 2.09279e-4 L 0,95 H 63.5292 L 174,2.09279e-4 Z"
+         fill="#017be3"
+         fill-rule="evenodd"
+         transform="matrix(-1,0,0,1,410,383)"
+         id="path6" />
+    </g>
+  </g>
+</svg>

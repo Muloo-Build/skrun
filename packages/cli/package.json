@@ -1,0 +1,49 @@
+{
+  "name": "@skrun-dev/cli",
+  "version": "0.1.1",
+  "type": "module",
+  "bin": {
+    "skrun": "./bin/skrun.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist", "bin"],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.10.0",
+    "@skrun-dev/schema": "workspace:*",
+    "commander": "^13.0.0",
+    "picocolors": "^1.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skrun-dev/skrun.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://github.com/skrun-dev/skrun#readme",
+  "bugs": "https://github.com/skrun-dev/skrun/issues",
+  "keywords": ["skrun", "agent-skills", "ai-agents"],
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

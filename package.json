@@ -1,0 +1,36 @@
+{
+  "name": "skrun",
+  "private": true,
+  "type": "module",
+  "description": "Deploy any Agent Skill as an API — The Vercel for Agent Skills",
+  "keywords": [
+    "agent-skills",
+    "ai-agents",
+    "llm",
+    "api",
+    "runtime",
+    "agent-as-api",
+    "typescript",
+    "hono",
+    "multi-model",
+    "stateful-agents"
+  ],
+  "scripts": {
+    "build": "pnpm -r run build",
+    "test": "pnpm -r run test",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "dev": "pnpm -r run dev",
+    "dev:registry": "pnpm --filter @skrun-dev/api dev",
+    "test:e2e": "node --env-file=.env --import tsx tests/e2e.ts"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.0",
+    "tsx": "^4.21.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@10.32.1"
+}

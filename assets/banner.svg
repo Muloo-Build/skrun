@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="1128"
+   height="376"
+   viewBox="0 0 1128 376"
+   version="1.1"
+   id="svg1"
+   inkscape:export-filename="bitmap_banner.svg"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     inkscape:export-bgcolor="#00000000">
+    <inkscape:page
+       x="0"
+       y="0"
+       width="1128"
+       height="376"
+       id="page2"
+       margin="0"
+       bleed="0" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1">
+    <clipPath
+       id="clip0">
+      <rect
+         x="236"
+         y="243"
+         width="521"
+         height="279"
+         id="rect1" />
+    </clipPath>
+  </defs>
+  <rect
+     style="fill:#000000;fill-opacity:1;stroke-width:1.00854"
+     id="rect2"
+     width="1128.3545"
+     height="375.72015"
+     x="-0.17724609"
+     y="0.1399231" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       clip-path="url(#clip0)"
+       transform="matrix(0.52762144,0,0,0.52762144,-34.016782,-49.40389)"
+       id="g6">
+      <path
+         d="m 583,288 h 63.529 L 757,383 646.529,478 H 583 l 110.471,-95 z"
+         fill="#00aeff"
+         fill-rule="evenodd"
+         id="path1" />
+      <path
+         d="M 0,0 H 63.5291 L 174,95 63.5291,190 H 0 L 110.471,95 Z"
+         fill="#00aeff"
+         fill-rule="evenodd"
+         transform="matrix(-1,0,0,1,410,288)"
+         id="path2" />
+      <path
+         d="M 427,243 652,382.5 427,522 Z"
+         fill="#00aeff"
+         fill-rule="evenodd"
+         id="path3" />
+      <path
+         d="M 634.472,372 652,382.841 427,522 v -79.655 z"
+         fill="#0070da"
+         fill-rule="evenodd"
+         id="path4" />
+      <path
+         d="M 693.471,383 H 757 v 0 L 646.529,478 H 583 Z"
+         fill="#017be3"
+         fill-rule="evenodd"
+         id="path5" />
+      <path
+         d="M 174,0 H 110.471 V 2.09279e-4 L 0,95 H 63.5292 L 174,2.09279e-4 Z"
+         fill="#017be3"
+         fill-rule="evenodd"
+         transform="matrix(-1,0,0,1,410,383)"
+         id="path6" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:162.911px;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93, Normal';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#fffefe;fill-opacity:1;stroke-width:1.52729"
+       x="591.22321"
+       y="185.10318"
+       id="text1"><tspan
+         sodipodi:role="line"
+         id="tspan1"
+         x="591.22321"
+         y="185.10318"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Bahnschrift;-inkscape-font-specification:'Bahnschrift Bold';fill:#fffefe;fill-opacity:1;stroke-width:1.52729">skrun</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:39.9239px;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93, Normal';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#fffefe;fill-opacity:1;stroke-width:0.374285"
+       x="674.44629"
+       y="243.08202"
+       id="text1-7"><tspan
+         sodipodi:role="line"
+         id="tspan1-1"
+         x="674.44629"
+         y="243.08202"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Bahnschrift;-inkscape-font-specification:'Bahnschrift Bold';fill:#fffefe;fill-opacity:1;stroke-width:0.374285">Deploy any Agent Skill as an API</tspan></text>
+  </g>
+</svg>

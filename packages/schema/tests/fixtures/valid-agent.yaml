@@ -1,0 +1,55 @@
+name: acme/seo-audit
+version: 1.0.0
+
+model:
+  provider: anthropic
+  name: claude-sonnet-4-20250514
+  temperature: 0.3
+  fallback:
+    provider: openai
+    name: gpt-4o
+
+tools:
+  - web_search
+  - browser
+
+mcp_servers:
+  - name: google-search-console
+    url: https://mcp.gsc.io/sse
+    auth: oauth2
+
+inputs:
+  - name: website_url
+    type: string
+    required: true
+
+outputs:
+  - name: seo_report
+    type: object
+  - name: score
+    type: number
+
+permissions:
+  network:
+    - googleapis.com
+    - "*.target-site"
+  filesystem: read-only
+  secrets:
+    - GSC_API_KEY
+
+runtime:
+  timeout: 300s
+  max_cost: 0.50
+  sandbox: strict
+
+context_mode: skill
+
+state:
+  type: kv
+  ttl: 30d
+
+tests:
+  - name: basic-audit
+    input:
+      website_url: "https://example.com"
+    assert: output.score >= 0
