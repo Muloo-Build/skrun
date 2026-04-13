@@ -13,7 +13,10 @@
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist", "bin"],
+  "files": [
+    "dist",
+    "bin"
+  ],
   "scripts": {
     "build": "tsc",
     "test": "vitest run",
@@ -21,15 +24,15 @@
     "dev": "tsc --watch"
   },
   "dependencies": {
-    "@clack/prompts": "^0.10.0",
+    "@clack/prompts": "^0.10.1",
     "@skrun-dev/schema": "workspace:*",
-    "commander": "^13.0.0",
-    "picocolors": "^1.1.0"
+    "commander": "^13.1.0",
+    "picocolors": "^1.1.1"
   },
   "devDependencies": {
-    "@types/node": "^25.5.0",
-    "typescript": "^5.7.0",
-    "vitest": "^3.0.0"
+    "@types/node": "^25.6.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
   },
   "publishConfig": {
     "access": "public"
@@ -42,7 +45,11 @@
   },
   "homepage": "https://github.com/skrun-dev/skrun#readme",
   "bugs": "https://github.com/skrun-dev/skrun/issues",
-  "keywords": ["skrun", "agent-skills", "ai-agents"],
+  "keywords": [
+    "skrun",
+    "agent-skills",
+    "ai-agents"
+  ],
   "engines": {
     "node": ">=20.0.0"
   }
