@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 20 new unit tests (executeStream, SSE formatting, webhook HMAC/retry)
 - 11 new E2E integration tests (streaming modes, validation, conflicts)
 - 5 new E2E live tests (SSE with real LLM, SSE with tool calls, webhook with real callback)
+- **TypeScript SDK** (`@skrun-dev/sdk`) — typed client for calling Skrun agents from Node.js. `run()`, `stream()`, `runAsync()`, `push()`, `pull()`, `list()`, `getAgent()`, `getVersions()`, `verify()`. Zero dependencies, Node.js 18+.
+- `SkrunApiError` — typed errors with `code`, `status`, `message`
+- SSE parser for SDK (`parseSSEStream`) — `AsyncGenerator<RunEvent>` from fetch response
+- 30 SDK unit tests (client, errors, SSE parser)
+- 9 SDK E2E integration tests (against real HTTP server)
+- 3 SDK live tests (run, stream, list against real LLM)
 
 ## [0.2.0] - 2026-04-12
 

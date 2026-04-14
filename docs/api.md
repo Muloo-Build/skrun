@@ -2,6 +2,8 @@
 
 Base URL: `http://localhost:4000` (local dev) or your deployed instance.
 
+> **Prefer the SDK?** Use `@skrun-dev/sdk` for a typed client instead of raw HTTP calls: `npm install @skrun-dev/sdk`
+
 ## Authentication
 
 All endpoints except health, list, metadata, and versions require a Bearer token:

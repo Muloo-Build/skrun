@@ -134,6 +134,35 @@ curl -X POST http://localhost:4000/api/agents/dev/code-review/run \
 
 [Full API reference →](docs/api.md)
 
+## SDK
+
+```bash
+npm install @skrun-dev/sdk
+```
+
+```typescript
+import { SkrunClient } from "@skrun-dev/sdk";
+
+const client = new SkrunClient({
+  baseUrl: "http://localhost:4000",
+  token: "dev-token",
+});
+
+// Sync
+const result = await client.run("dev/code-review", { code: "const x = 1;" });
+console.log(result.output);
+
+// Stream (real-time events)
+for await (const event of client.stream("dev/code-review", { code: "..." })) {
+  console.log(event.type); // run_start, tool_call, llm_complete, run_complete
+}
+
+// Async webhook
+const { run_id } = await client.runAsync("dev/agent", { code: "..." }, "https://your-app.com/hook");
+```
+
+Full coverage: `run`, `stream`, `runAsync`, `push`, `pull`, `list`, `getAgent`, `getVersions`, `verify`. Zero dependencies, Node.js 18+.
+
 ## Demo Agents
 
 All examples use Google Gemini Flash by default. Change the `model` section in `agent.yaml` to use any [supported provider](#key-concepts).

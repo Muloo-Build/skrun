@@ -14,7 +14,8 @@
     "rules": {
       "recommended": true,
       "complexity": {
-        "noUselessTypeConstraint": "error"
+        "noUselessTypeConstraint": "error",
+        "noUselessLoneBlockStatements": "off"
       },
       "correctness": {
         "noUnusedImports": "error",
