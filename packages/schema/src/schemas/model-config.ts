@@ -13,6 +13,7 @@ export const ModelConfigSchema = z.object({
   provider: ModelProviderSchema,
   name: z.string().min(1, "Model name is required"),
   temperature: z.number().min(0).max(2).optional(),
+  base_url: z.string().url("base_url must be a valid URL").optional(),
   fallback: FallbackModelSchema.optional(),
 });
 

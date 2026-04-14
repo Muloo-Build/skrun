@@ -21,9 +21,46 @@ The `agent.yaml` file is Skrun's extension to the Agent Skills standard. It decl
 | `provider` | enum | Yes | `anthropic`, `openai`, `google`, `mistral`, `groq`, `meta` |
 | `name` | string | Yes | Model name (e.g., `claude-sonnet-4-20250514`) |
 | `temperature` | number | No | 0-2, controls randomness |
+| `base_url` | string | No | Custom API endpoint (for self-hosted models — Ollama, vLLM, LocalAI). Any OpenAI-compatible endpoint. |
 | `fallback` | object | No | Backup model if primary fails |
 | `fallback.provider` | enum | Yes (if fallback) | Same as provider |
 | `fallback.name` | string | Yes (if fallback) | Same as name |
+
+**Custom endpoints**: set `base_url` to use any OpenAI-compatible API. Works with self-hosted models, Chinese providers, and inference platforms.
+
+```yaml
+# Self-hosted (Ollama, vLLM, LocalAI)
+model:
+  provider: openai
+  name: llama3
+  base_url: http://localhost:11434/v1
+
+# DeepSeek
+model:
+  provider: openai
+  name: deepseek-chat
+  base_url: https://api.deepseek.com/v1
+
+# Kimi (Moonshot)
+model:
+  provider: openai
+  name: kimi-k2.5
+  base_url: https://api.moonshot.ai/v1
+
+# Qwen (Alibaba)
+model:
+  provider: openai
+  name: qwen-plus
+  base_url: https://dashscope-intl.aliyuncs.com/compatible-mode/v1
+
+# Zhipu GLM
+model:
+  provider: openai
+  name: glm-4-flash
+  base_url: https://api.z.ai/api/paas/v4/
+```
+
+Set the API key via `X-LLM-API-Key` header or the `OPENAI_API_KEY` env var (it's used for any OpenAI-compatible endpoint when `base_url` is set).
 
 ### `tools` (optional)
 - **Type**: array of objects

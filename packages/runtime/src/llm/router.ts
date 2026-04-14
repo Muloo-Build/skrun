@@ -3,6 +3,7 @@ import { estimateCost } from "./cost.js";
 import { AnthropicProvider } from "./providers/anthropic.js";
 import { GoogleProvider } from "./providers/google.js";
 import {
+  OpenAICompatibleProvider,
   createGroqProvider,
   createMistralProvider,
   createOpenAIProvider,
@@ -79,6 +80,7 @@ export class LLMRouter {
         onToolCall,
         temperature ?? modelConfig.temperature,
         callerKeys,
+        modelConfig.base_url,
       );
       totalPromptTokens += result.usage.promptTokens;
       totalCompletionTokens += result.usage.completionTokens;
@@ -133,8 +135,9 @@ export class LLMRouter {
     onToolCall?: ToolCallHandler,
     temperature?: number,
     callerKeys?: Record<string, string>,
+    baseUrl?: string,
   ): Promise<{ content: string; usage: { promptTokens: number; completionTokens: number } }> {
-    const llmProvider = this.resolveProvider(provider, callerKeys);
+    const llmProvider = this.resolveProvider(provider, callerKeys, baseUrl);
 
     let totalPromptTokens = 0;
     let totalCompletionTokens = 0;
@@ -184,12 +187,21 @@ export class LLMRouter {
   }
 
   /** Resolve the provider for a given request: caller key takes precedence over server key. */
-  private resolveProvider(providerName: string, callerKeys?: Record<string, string>): LLMProvider {
+  private resolveProvider(
+    providerName: string,
+    callerKeys?: Record<string, string>,
+    baseUrl?: string,
+  ): LLMProvider {
     // 1. Caller-provided key → ephemeral provider instance
     if (callerKeys?.[providerName]) {
-      return this.createProvider(providerName, callerKeys[providerName]);
+      return this.createProvider(providerName, callerKeys[providerName], baseUrl);
     }
-    // 2. Server-side provider (registered at startup from env vars)
+    // 2. Custom base_url → ephemeral provider with server key + custom endpoint
+    if (baseUrl) {
+      const envKey = process.env[`${providerName.toUpperCase()}_API_KEY`] ?? "";
+      return this.createProvider(providerName, envKey, baseUrl);
+    }
+    // 3. Server-side provider (registered at startup from env vars)
     const serverProvider = this.providers.get(providerName);
     if (serverProvider) {
       return serverProvider;
@@ -200,8 +212,13 @@ export class LLMRouter {
     );
   }
 
-  /** Create an ephemeral provider instance with an explicit API key. */
-  private createProvider(providerName: string, apiKey: string): LLMProvider {
+  /** Create an ephemeral provider instance with an explicit API key and optional base URL. */
+  private createProvider(providerName: string, apiKey: string, baseUrl?: string): LLMProvider {
+    // If base_url is provided, use OpenAI-compatible provider regardless of provider name
+    // (Ollama, vLLM, LocalAI all expose OpenAI-compatible endpoints)
+    if (baseUrl) {
+      return new OpenAICompatibleProvider(providerName, apiKey || "no-key", baseUrl);
+    }
     switch (providerName) {
       case "anthropic":
         return new AnthropicProvider(apiKey);

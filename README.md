@@ -8,131 +8,63 @@
   <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
 </p>
 
+<p align="center">
+  <b>The open, multi-model agent runtime.</b><br>
+  Turn any AI agent skill into a production API — with streaming, typed SDK, and zero vendor lock-in.
+</p>
+
+<p align="center">
+  <a href="#quick-start">Quick Start</a> &middot;
+  <a href="#sdk">SDK</a> &middot;
+  <a href="http://localhost:4000/docs">Interactive Docs</a> &middot;
+  <a href="docs/api.md">API Reference</a> &middot;
+  <a href="#demo-agents">Examples</a>
+</p>
+
 ---
 
-Turn any [Agent Skill](https://agentskills.io) (SKILL.md) into a callable API via `POST /run`. Multi-model, stateful, open source.
+## Why Skrun?
+
+Every major LLM provider is building their own agent runtime — locked to their models. Skrun is the **open alternative**: same agent, any LLM, your infrastructure.
+
+| | Skrun | Vendor runtimes |
+|--|-------|-----------------|
+| Models | Anthropic, OpenAI, Google, Mistral, Groq, DeepSeek, Kimi, Qwen + any OpenAI-compatible endpoint | One provider only |
+| Deployment | Self-hosted or cloud (coming soon) | Vendor cloud only |
+| Format | [Agent Skills](https://agentskills.io) (SKILL.md) — works with Claude Code, Copilot, Codex | Proprietary |
+| Streaming | SSE + async webhooks | Varies |
+| Open source | MIT | No |
 
 ## Quick Start
 
 ```bash
 npm install -g @skrun-dev/cli
+
+skrun init --from-skill ./my-skill    # import an existing skill
+skrun deploy                           # build + push + get your API endpoint
 ```
 
-```bash
-# Import an existing skill → deploy → call
-skrun init --from-skill ./my-skill
-skrun deploy
+That's it. Your agent is now callable via `POST /run`:
 
-curl -X POST localhost:4000/api/agents/dev/my-skill/run \
-  -H "Authorization: Bearer <token>" \
+```bash
+curl -X POST http://localhost:4000/api/agents/dev/my-skill/run \
+  -H "Authorization: Bearer dev-token" \
   -H "Content-Type: application/json" \
   -d '{"input": {"query": "analyze this"}}'
 ```
 
-## Get Started
+## Features
 
-- [Create a new agent](#create-a-new-agent)
-- [Import an existing skill](#import-an-existing-skill)
-- [Develop & test locally](#develop-locally)
-- [Deploy](#deploy)
-
-## Create a new agent
-
-```bash
-skrun init my-agent
-cd my-agent
-# Creates SKILL.md (instructions) + agent.yaml (config)
-```
-
-## Import an existing skill
-
-```bash
-skrun init --from-skill ./path-to-skill
-# Reads SKILL.md, asks 2-3 questions, generates agent.yaml
-```
-
-## Develop locally
-
-```bash
-skrun dev
-# ✓ Server running at http://localhost:3000
-# POST /run ready — watching for changes...
-```
-
-```bash
-skrun test
-# ✓ basic-test (output.score >= 0)
-# 1 passed, 0 failed
-```
-
-## Deploy
-
-```bash
-skrun deploy
-# ✓ Validated → Built → Pushed
-# 🚀 POST http://localhost:4000/api/agents/you/my-agent/run
-```
-
-> **v0.1 ships with a local runtime.** Cloud deploy is on the roadmap — the architecture is ready (`RuntimeAdapter` interface).
-
-## Key Concepts
-
-- **[Agent Skills](https://agentskills.io)** — SKILL.md standard, compatible with Claude Code, Copilot, Codex
-- **[agent.yaml](docs/agent-yaml.md)** — Runtime config: model, inputs/outputs, permissions, state, tests
-- **[POST /run](docs/cli.md)** — Every agent is an API. Typed inputs, structured outputs.
-- **Multi-model** — Anthropic, OpenAI, Google, Mistral, Groq with automatic fallback
-- **Streaming** — SSE for real-time events, async webhooks for long-running agents
-- **Stateful** — Agents remember across runs via key-value state
-- **Tool calling** — Two approaches: CLI tools ([`scripts/`](docs/agent-yaml.md#tools-optional) — write your own, bundled with the agent) and MCP servers ([`npx`](docs/agent-yaml.md#mcp_servers-optional) — [standard ecosystem](https://github.com/modelcontextprotocol/servers), same as Claude Desktop)
-
-## Caller-provided API Keys
-
-By default, POST /run uses the server's LLM API keys (from `.env`). You can instead provide your own keys per request via the `X-LLM-API-Key` header:
-
-```bash
-curl -X POST http://localhost:4000/api/agents/dev/code-review/run \
-  -H "Authorization: Bearer dev-token" \
-  -H "Content-Type: application/json" \
-  -H 'X-LLM-API-Key: {"anthropic": "sk-ant-your-key"}' \
-  -d '{"input": {"code": "function add(a,b) { return a + b; }"}}'
-```
-
-The header value is a JSON object mapping provider names to API keys. Accepted providers: `anthropic`, `openai`, `google`, `mistral`, `groq`.
-
-**Key priority**: caller key > server key > 401 error. If the caller key fails (invalid, quota exceeded), the error is returned directly — no fallback to server keys.
-
-**Security**: caller keys are never logged, stored, or returned in responses. Use HTTPS in production.
-
-## Streaming
-
-### SSE — real-time events
-
-Add `Accept: text/event-stream` to get live progress during agent execution:
-
-```bash
-curl -N -X POST http://localhost:4000/api/agents/dev/code-review/run \
-  -H "Authorization: Bearer dev-token" \
-  -H "Content-Type: application/json" \
-  -H "Accept: text/event-stream" \
-  -d '{"input": {"code": "const x = 1;"}}'
-```
-
-Events: `run_start` → `tool_call` / `tool_result` → `llm_complete` → `run_complete`. Without the header, POST /run returns a normal JSON response (backward compatible).
-
-### Async webhook
-
-For long-running agents, provide a `webhook_url` to get the result via callback:
-
-```bash
-curl -X POST http://localhost:4000/api/agents/dev/code-review/run \
-  -H "Authorization: Bearer dev-token" \
-  -H "Content-Type: application/json" \
-  -d '{"input": {"code": "const x = 1;"}, "webhook_url": "https://your-app.com/callback"}'
-# → 202 Accepted with { "run_id": "..." }
-# → Result POSTed to your webhook_url when done (with HMAC signature)
-```
-
-[Full API reference →](docs/api.md)
+| Feature | Description |
+|---------|-------------|
+| **Multi-model** | 5 built-in providers + any OpenAI-compatible endpoint (DeepSeek, Kimi, Qwen, Ollama, vLLM...) — with automatic fallback |
+| **Streaming** | SSE real-time events (`run_start` → `tool_call` → `run_complete`) + async webhooks |
+| **Typed SDK** | `npm install @skrun-dev/sdk` — `run()`, `stream()`, `runAsync()` + 6 more methods |
+| **Tool calling** | Local scripts (`scripts/`) + MCP servers (`npx`) — same ecosystem as Claude Desktop |
+| **Stateful** | Agents remember across runs via key-value state |
+| **Interactive docs** | OpenAPI 3.1 schema + Scalar explorer at `GET /docs` |
+| **Caller keys** | Users bring their own LLM keys via `X-LLM-API-Key` — zero cost for operators |
+| **Agent verification** | Verified flag controls script execution — safe for third-party agents |
 
 ## SDK
 
@@ -148,24 +80,22 @@ const client = new SkrunClient({
   token: "dev-token",
 });
 
-// Sync
+// Sync — get the result
 const result = await client.run("dev/code-review", { code: "const x = 1;" });
 console.log(result.output);
 
-// Stream (real-time events)
+// Stream — real-time events
 for await (const event of client.stream("dev/code-review", { code: "..." })) {
   console.log(event.type); // run_start, tool_call, llm_complete, run_complete
 }
 
-// Async webhook
-const { run_id } = await client.runAsync("dev/agent", { code: "..." }, "https://your-app.com/hook");
+// Async — fire and forget
+const { run_id } = await client.runAsync("dev/agent", input, "https://your-app.com/hook");
 ```
 
-Full coverage: `run`, `stream`, `runAsync`, `push`, `pull`, `list`, `getAgent`, `getVersions`, `verify`. Zero dependencies, Node.js 18+.
+9 methods: `run`, `stream`, `runAsync`, `push`, `pull`, `list`, `getAgent`, `getVersions`, `verify`. Zero dependencies, Node.js 18+.
 
 ## Demo Agents
-
-All examples use Google Gemini Flash by default. Change the `model` section in `agent.yaml` to use any [supported provider](#key-concepts).
 
 | Agent | What it shows |
 |-------|--------------|
@@ -176,7 +106,8 @@ All examples use Google Gemini Flash by default. Change the `model` section in `
 | [email-drafter](examples/email-drafter/) | Business use case — non-dev API consumer |
 | [web-scraper](examples/web-scraper/) | **MCP server** — headless browser via @playwright/mcp |
 
-### Try an example
+<details>
+<summary><b>Try an example</b></summary>
 
 ```bash
 # 1. Start the registry
@@ -197,6 +128,8 @@ curl -X POST http://localhost:4000/api/agents/dev/code-review/run \
 
 > **Windows (PowerShell):** use `curl.exe` instead of `curl`, and use `@input.json` for the body.
 
+</details>
+
 ## CLI
 
 | Command | Description |
@@ -211,11 +144,15 @@ curl -X POST http://localhost:4000/api/agents/dev/code-review/run \
 | `skrun login` / `logout` | Authentication |
 | `skrun logs <agent>` | Execution logs |
 
-[Full CLI reference →](docs/cli.md)
+## Key Concepts
+
+- **[Agent Skills](https://agentskills.io)** — SKILL.md standard, compatible with Claude Code, Copilot, Codex
+- **[agent.yaml](docs/agent-yaml.md)** — Runtime config: model, inputs/outputs, permissions, state, tests
+- **[POST /run](docs/api.md)** — Every agent is an API. Typed inputs, structured outputs.
 
 ## Documentation
 
-- [Interactive API docs](http://localhost:4000/docs) — live explorer (start the registry first)
+- [Interactive API explorer](http://localhost:4000/docs) — live "Try it" interface (start the registry first)
 - [OpenAPI schema](http://localhost:4000/openapi.json) — import into Postman/Insomnia
 - [API reference](docs/api.md)
 - [agent.yaml specification](docs/agent-yaml.md)
