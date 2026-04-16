@@ -4,6 +4,7 @@ import { cors } from "hono/cors";
 import type { MemoryDb } from "./db/memory.js";
 import { rateLimiter } from "./middleware/rate-limit.js";
 import { getOpenAPISchema } from "./openapi.js";
+import { createGatewayRoutes } from "./routes/gateway.js";
 import { createRegistryRoutes } from "./routes/registry.js";
 import { createRunRoutes } from "./routes/run.js";
 import { RegistryService } from "./services/registry.js";
@@ -19,8 +20,14 @@ export function createApp(storage: StorageAdapter, db: MemoryDb) {
   // Rate limiting — 60 requests per minute per IP on mutating endpoints
   app.use("/api/agents/*/push", rateLimiter({ windowMs: 60_000, max: 10 }));
   app.use("/api/agents/*/run", rateLimiter({ windowMs: 60_000, max: 60 }));
+  app.use("/api/run", rateLimiter({ windowMs: 60_000, max: 60 }));
 
-  app.get("/health", (c) => c.json({ status: "ok" }));
+  app.get("/health", (c) =>
+    c.json({
+      ok: true,
+      service: process.env.SERVICE_NAME ?? "muloo-agent-runtime",
+    }),
+  );
 
   // OpenAPI schema + interactive docs
   app.get("/openapi.json", (c) => {
@@ -35,6 +42,7 @@ export function createApp(storage: StorageAdapter, db: MemoryDb) {
     }),
   );
 
+  app.route("/api", createGatewayRoutes());
   app.route("/api", createRegistryRoutes(service));
   app.route("/api", createRunRoutes(service));
 

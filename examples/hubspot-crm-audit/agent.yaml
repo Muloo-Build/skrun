@@ -1,0 +1,65 @@
+name: muloo/hubspot-crm-audit
+version: 0.1.0
+
+model:
+  provider: google
+  name: gemini-2.5-flash
+
+inputs:
+  - name: portalId
+    type: string
+    required: true
+    description: HubSpot portal ID to audit
+  - name: objectTypes
+    type: array
+    required: true
+    description: CRM object types to inspect, such as contacts or deals
+  - name: auditFocus
+    type: array
+    required: true
+    description: Focus areas such as properties, pipelines, lifecycle, and governance
+
+outputs:
+  - name: summary
+    type: string
+    description: High-level audit summary
+  - name: issues
+    type: array
+    description: Detected audit issues
+  - name: risks
+    type: array
+    description: Delivery or governance risks
+  - name: recommendations
+    type: array
+    description: Structured recommendations for Muloo and the client team
+  - name: estimated_effort
+    type: object
+    description: Rough implementation effort for the next phase
+  - name: next_steps
+    type: array
+    description: Suggested follow-up actions
+
+permissions:
+  network: []
+  filesystem: read-only
+  secrets:
+    - HUBSPOT_PRIVATE_APP_TOKEN
+    - HUBSPOT_CLIENT_ID
+    - HUBSPOT_CLIENT_SECRET
+    - HUBSPOT_REDIRECT_URI
+
+runtime:
+  timeout: 180s
+  sandbox: strict
+
+state:
+  type: none
+  ttl: 30d
+
+tests:
+  - name: read-only-shape
+    input:
+      portalId: "123456"
+      objectTypes: ["contacts", "companies", "deals", "tickets"]
+      auditFocus: ["properties", "pipelines", "lifecycle", "governance"]
+    assert: output.summary != ""

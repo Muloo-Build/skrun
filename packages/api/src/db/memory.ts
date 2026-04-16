@@ -1,12 +1,67 @@
 import { randomUUID } from "node:crypto";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname } from "node:path";
 import type { Agent, AgentVersion } from "./schema.js";
+
+interface DbSnapshot {
+  agents: Agent[];
+  versions: AgentVersion[];
+}
 
 export class MemoryDb {
   private agents = new Map<string, Agent>();
   private versions = new Map<string, AgentVersion[]>();
 
+  constructor(private filePath?: string) {
+    this.load();
+  }
+
   private agentKey(namespace: string, name: string): string {
     return `${namespace}/${name}`;
+  }
+
+  private load(): void {
+    if (!this.filePath || !existsSync(this.filePath)) {
+      return;
+    }
+
+    try {
+      const raw = readFileSync(this.filePath, "utf-8");
+      const snapshot = JSON.parse(raw) as Partial<DbSnapshot>;
+
+      this.agents.clear();
+      this.versions.clear();
+
+      for (const agent of snapshot.agents ?? []) {
+        this.agents.set(this.agentKey(agent.namespace, agent.name), agent);
+      }
+
+      for (const version of snapshot.versions ?? []) {
+        const versions = this.versions.get(version.agent_id) ?? [];
+        versions.push(version);
+        this.versions.set(version.agent_id, versions);
+      }
+    } catch (error) {
+      console.warn("[Skrun] Failed to load persisted registry metadata:", error);
+    }
+  }
+
+  private persist(): void {
+    if (!this.filePath) {
+      return;
+    }
+
+    const dir = dirname(this.filePath);
+    if (!existsSync(dir)) {
+      mkdirSync(dir, { recursive: true });
+    }
+
+    const snapshot: DbSnapshot = {
+      agents: [...this.agents.values()],
+      versions: [...this.versions.values()].flat(),
+    };
+
+    writeFileSync(this.filePath, JSON.stringify(snapshot, null, 2));
   }
 
   createAgent(data: {
@@ -26,6 +81,7 @@ export class MemoryDb {
     };
     this.agents.set(key, agent);
     this.versions.set(agent.id, []);
+    this.persist();
     return agent;
   }
 
@@ -64,6 +120,7 @@ export class MemoryDb {
       }
     }
 
+    this.persist();
     return version;
   }
 
@@ -86,11 +143,13 @@ export class MemoryDb {
     if (!agent) return null;
     agent.verified = verified;
     agent.updated_at = new Date().toISOString();
+    this.persist();
     return agent;
   }
 
   clear(): void {
     this.agents.clear();
     this.versions.clear();
+    this.persist();
   }
 }

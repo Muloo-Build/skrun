@@ -159,6 +159,93 @@ curl -X POST http://localhost:4000/api/agents/dev/code-review/run \
 - [CLI reference](docs/cli.md)
 - [Contributing](CONTRIBUTING.md)
 
+## Muloo Railway Deployment
+
+This repo can now run as the first Railway-hosted version of Muloo's central agent runtime. For Muloo-facing clients such as Deploy OS and EPI-USE Command Centre, the intended public API surface is the lightweight **Muloo Agent Gateway** at `POST /api/run`. The raw Skrun registry/runtime routes still exist for internal operator workflows, but they should not be treated as the long-term public interface.
+
+### Run locally
+
+```bash
+pnpm install
+cp .env.example .env
+pnpm build
+pnpm start
+```
+
+For local development with hot reload, use:
+
+```bash
+pnpm dev:registry
+```
+
+If `SKRUN_API_TOKEN` is unset locally, authenticate with `Authorization: Bearer dev-token`. If you set `SKRUN_API_TOKEN`, use that token for both `/api/run` and the protected registry routes.
+
+### Deploy on Railway
+
+1. Create a new Railway service from this repo.
+2. Let Railway build from the included `Dockerfile`.
+3. Add the required environment variables listed below.
+4. Set `SKRUN_DATA_DIR` to your mounted Railway volume path if you want pushed agent bundles and registry metadata to survive deploys.
+5. Deploy and confirm `GET /health` returns `200`.
+
+### Required environment variables
+
+- `NODE_ENV=production`
+- `PORT` supplied by Railway
+- `SKRUN_API_TOKEN`
+- `OPENAI_API_KEY` and/or `ANTHROPIC_API_KEY` and/or `GOOGLE_API_KEY`
+- `HUBSPOT_PRIVATE_APP_TOKEN` when you are ready to wire live HubSpot reads
+- `HUBSPOT_CLIENT_ID`
+- `HUBSPOT_CLIENT_SECRET`
+- `HUBSPOT_REDIRECT_URI`
+
+Useful optional variables:
+
+- `HOST=0.0.0.0`
+- `SKRUN_NAMESPACE=muloo`
+- `SKRUN_DATA_DIR=/data/skrun`
+- `CORS_ORIGIN=https://agents.wearemuloo.com`
+
+### Test the health endpoint
+
+```bash
+curl http://localhost:4000/health
+```
+
+Expected response:
+
+```json
+{ "ok": true, "service": "muloo-agent-runtime" }
+```
+
+### Test an example agent run
+
+Use the Muloo gateway:
+
+```bash
+curl -X POST http://localhost:4000/api/run \
+  -H "Authorization: Bearer dev-token" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tenantId": "muloo-demo",
+    "skill": "hubspot-crm-audit",
+    "input": {
+      "portalId": "123456",
+      "objectTypes": ["contacts", "companies", "deals", "tickets"],
+      "auditFocus": ["properties", "pipelines", "lifecycle", "governance"]
+    }
+  }'
+```
+
+You can also inspect the starter payloads in [`examples/hubspot-crm-audit/`](examples/hubspot-crm-audit/).
+
+### Notes
+
+- Keep provider keys and HubSpot credentials on the backend only.
+- The current `hubspot-crm-audit` flow is intentionally read-only and returns planning-grade structured JSON.
+- Any future HubSpot write actions should require human approval before execution.
+- Client platforms should call the Muloo Agent Gateway, not raw Skrun endpoints, unless Muloo is using the internal registry workflow on purpose.
+
 ## Contributing
 
 ```bash

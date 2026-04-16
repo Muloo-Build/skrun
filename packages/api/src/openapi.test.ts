@@ -8,9 +8,10 @@ describe("OpenAPI Schema", () => {
     expect(schema.openapi).toBe("3.1.0");
   });
 
-  it("has all 9 endpoint paths", () => {
+  it("has all gateway and registry endpoint paths", () => {
     const paths = Object.keys(schema.paths);
     expect(paths).toContain("/health");
+    expect(paths).toContain("/api/run");
     expect(paths).toContain("/api/agents/{namespace}/{name}/run");
     expect(paths).toContain("/api/agents/{namespace}/{name}/push");
     expect(paths).toContain("/api/agents/{namespace}/{name}/pull");

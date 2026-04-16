@@ -7,7 +7,7 @@ export function getOpenAPISchema(baseUrl = "http://localhost:4000") {
     openapi: "3.1.0",
     info: {
       title: "Skrun API",
-      version: "0.2.0",
+      version: "0.3.0",
       description: "Deploy any Agent Skill as an API. Multi-model, stateful, open source.",
       license: { name: "MIT", url: "https://github.com/skrun-dev/skrun/blob/main/LICENSE" },
     },
@@ -22,6 +22,14 @@ export function getOpenAPISchema(baseUrl = "http://localhost:4000") {
         },
       },
       schemas: {
+        HealthResponse: {
+          type: "object",
+          properties: {
+            ok: { type: "boolean", example: true },
+            service: { type: "string", example: "muloo-agent-runtime" },
+          },
+          required: ["ok", "service"],
+        },
         ErrorResponse: {
           type: "object",
           properties: {
@@ -66,6 +74,37 @@ export function getOpenAPISchema(baseUrl = "http://localhost:4000") {
             run_id: { type: "string", format: "uuid" },
           },
           required: ["run_id"],
+        },
+        GatewayRunRequest: {
+          type: "object",
+          properties: {
+            tenantId: { type: "string", example: "muloo-demo" },
+            skill: { type: "string", enum: ["hubspot-crm-audit"] },
+            input: {
+              type: "object",
+              additionalProperties: true,
+              example: {
+                portalId: "123456",
+                objectTypes: ["contacts", "companies", "deals", "tickets"],
+                auditFocus: ["properties", "pipelines", "lifecycle", "governance"],
+              },
+            },
+          },
+          required: ["tenantId", "skill", "input"],
+        },
+        GatewayRunResponse: {
+          type: "object",
+          properties: {
+            ok: { type: "boolean", example: true },
+            requestId: { type: "string", format: "uuid" },
+            tenantId: { type: "string" },
+            skill: { type: "string", enum: ["hubspot-crm-audit"] },
+            result: {
+              type: "object",
+              additionalProperties: true,
+            },
+          },
+          required: ["ok", "requestId", "tenantId", "skill", "result"],
         },
         AgentMetadata: {
           type: "object",
@@ -132,11 +171,44 @@ export function getOpenAPISchema(baseUrl = "http://localhost:4000") {
               description: "Server is healthy",
               content: {
                 "application/json": {
-                  schema: {
-                    type: "object",
-                    properties: { status: { type: "string", example: "ok" } },
-                  },
+                  schema: { $ref: "#/components/schemas/HealthResponse" },
                 },
+              },
+            },
+          },
+        },
+      },
+      "/api/run": {
+        post: {
+          summary: "Run an approved Muloo gateway skill",
+          operationId: "runGatewaySkill",
+          requestBody: {
+            required: true,
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/GatewayRunRequest" },
+              },
+            },
+          },
+          responses: {
+            "200": {
+              description: "Gateway execution result",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/GatewayRunResponse" },
+                },
+              },
+            },
+            "400": {
+              description: "Validation error",
+              content: {
+                "application/json": { schema: { $ref: "#/components/schemas/ErrorResponse" } },
+              },
+            },
+            "401": {
+              description: "Unauthorized",
+              content: {
+                "application/json": { schema: { $ref: "#/components/schemas/ErrorResponse" } },
               },
             },
           },

@@ -1,0 +1,51 @@
+{
+  "summary": "Read-only HubSpot CRM audit prepared for tenant muloo-demo on portal 123456. This MVP stub scopes contacts, companies, deals, tickets across properties, pipelines, lifecycle, governance and returns planning-grade findings without making HubSpot API calls.",
+  "issues": [
+    {
+      "id": "property-catalog-review",
+      "severity": "medium",
+      "area": "properties",
+      "title": "Property catalogue should be reviewed for overlap and drift",
+      "detail": "Review duplicate labels, near-duplicate internal names, and unused custom properties before exposing the audit to client teams."
+    },
+    {
+      "id": "lifecycle-definition-review",
+      "severity": "high",
+      "area": "lifecycle",
+      "title": "Lifecycle and deal stage definitions likely need a governance pass",
+      "detail": "Map lifecycle stage usage against the commercial process to catch skipped stages, recycled deals, and ambiguous qualification rules."
+    }
+  ],
+  "risks": [
+    {
+      "severity": "high",
+      "title": "Schema drift can undermine reporting confidence",
+      "detail": "Overlapping properties and inconsistent stage usage will reduce trust in reporting and automations."
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": "now",
+      "action": "Fetch and inventory HubSpot metadata only",
+      "detail": "Implement read-only collection of properties, pipelines, and object metadata first."
+    },
+    {
+      "priority": "next",
+      "action": "Define canonical lifecycle and stage semantics",
+      "detail": "Agree one business-owned definition set before any cleanup begins."
+    }
+  ],
+  "estimated_effort": {
+    "level": "medium",
+    "hours": "8-16",
+    "assumptions": [
+      "HubSpot authentication details are available to the backend only.",
+      "The first production pass remains metadata-only and read-only."
+    ]
+  },
+  "next_steps": [
+    "Wire the skill to read HubSpot properties, pipelines, and object metadata.",
+    "Add duplicate-property heuristics and lifecycle-stage consistency rules.",
+    "Keep HubSpot write actions disabled until a human approval flow is designed."
+  ]
+}

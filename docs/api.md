@@ -28,8 +28,67 @@ GET /health
 
 **Response** `200`
 ```json
-{ "status": "ok" }
+{ "ok": true, "service": "muloo-agent-runtime" }
 ```
+
+---
+
+### Muloo Gateway
+
+```
+POST /api/run
+```
+
+Run an approved Muloo-managed gateway skill. This is the preferred public entrypoint for Muloo client platforms.
+
+**Headers**
+
+| Header | Required | Description |
+|--------|----------|-------------|
+| `Authorization` | Yes | `Bearer <token>` |
+| `Content-Type` | Yes | `application/json` |
+
+**Request body**
+
+```json
+{
+  "tenantId": "muloo-demo",
+  "skill": "hubspot-crm-audit",
+  "input": {
+    "portalId": "123456",
+    "objectTypes": ["contacts", "companies", "deals", "tickets"],
+    "auditFocus": ["properties", "pipelines", "lifecycle", "governance"]
+  }
+}
+```
+
+Only explicitly approved skills are accepted right now:
+- `hubspot-crm-audit`
+
+**Response** `200`
+
+```json
+{
+  "ok": true,
+  "requestId": "uuid",
+  "tenantId": "muloo-demo",
+  "skill": "hubspot-crm-audit",
+  "result": {
+    "summary": "Read-only HubSpot CRM audit prepared for tenant muloo-demo on portal 123456.",
+    "issues": [],
+    "risks": [],
+    "recommendations": [],
+    "estimated_effort": {
+      "level": "medium",
+      "hours": "8-16",
+      "assumptions": []
+    },
+    "next_steps": []
+  }
+}
+```
+
+The current gateway implementation uses a local, read-only skill runner for `hubspot-crm-audit`. No HubSpot create, update, or delete actions are performed.
 
 ---
 

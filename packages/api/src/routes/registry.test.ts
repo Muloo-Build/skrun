@@ -27,7 +27,8 @@ describe("Registry Routes", () => {
     const res = await app.request("/health");
     expect(res.status).toBe(200);
     const body = await res.json();
-    expect(body.status).toBe("ok");
+    expect(body.ok).toBe(true);
+    expect(body.service).toBe("muloo-agent-runtime");
   });
 
   it("POST /push succeeds with auth", async () => {

@@ -1,0 +1,6 @@
+{
+  "tenantId": "muloo-demo",
+  "portalId": "123456",
+  "objectTypes": ["contacts", "companies", "deals", "tickets"],
+  "auditFocus": ["properties", "pipelines", "lifecycle", "governance"]
+}

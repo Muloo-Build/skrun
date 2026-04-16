@@ -22,6 +22,7 @@
     "lint:fix": "biome check --write .",
     "dev": "pnpm -r run dev",
     "dev:registry": "pnpm --filter @skrun-dev/api dev",
+    "start": "pnpm --filter @skrun-dev/api start",
     "test:e2e": "vitest run --config vitest.config.e2e.ts",
     "test:e2e:live": "node --env-file=.env --import tsx tests/e2e.ts"
   },

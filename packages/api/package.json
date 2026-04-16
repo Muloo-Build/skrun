@@ -15,7 +15,8 @@
     "build": "tsc",
     "test": "vitest run",
     "test:watch": "vitest",
-    "dev": "node --env-file=../../.env --import tsx src/dev.ts"
+    "dev": "node --env-file=../../.env --import tsx src/dev.ts",
+    "start": "node dist/server.js"
   },
   "dependencies": {
     "@hono/node-server": "^1.19.14",
